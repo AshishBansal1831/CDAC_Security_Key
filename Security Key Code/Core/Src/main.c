@@ -63,6 +63,7 @@ static void MX_GPIO_Init(void);
 static void MX_UART4_Init(void);
 /* USER CODE BEGIN PFP */
 int8_t send_report(uint8_t* report, uint16_t len);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/

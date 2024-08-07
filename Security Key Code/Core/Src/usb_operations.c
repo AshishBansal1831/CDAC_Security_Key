@@ -12,6 +12,20 @@
 #include <stdio.h>
 /*-----------------------------END INCLUDES-------------------------------------*/
 
+/*-------------------------------DEFINES----------------------------------------*/
+
+/*-----------------------------END DEFINES--------------------------------------*/
+
+
+/*---------------------------Typedefs & Structures------------------------------*/
+typedef struct
+{
+	uint8_t report_id;
+	uint8_t paramter;
+	uint8_t data[64];
+}Report;
+/*-------------------------END Typedefs & Structures----------------------------*/
+
 /*-------------------------------Extern Variables--------------------------------------*/
 extern UART_HandleTypeDef huart4;
 /*-----------------------------END Extern Variables------------------------------------*/
@@ -20,26 +34,43 @@ extern UART_HandleTypeDef huart4;
 const UART_HandleTypeDef *FingerPrint = &huart4;
 
 USB_OPERATIONS operation = NO_ACTION;
+
+const char *HOST_STRING   = "Hi, this string from host which is signed using Device Public Key";
+const char *DEVICE_STRING = "Hi, this one is from the firware side which is signed using HOST Public Key";
+
+static uint8_t HOST_Public_Key[PUBLIC_KEY_SIZE];
+static uint8_t DEVICE_Public_Key[PUBLIC_KEY_SIZE];
 /*-----------------------------END Variables------------------------------------*/
 
 
 /*-------------------------------Function Prototypes--------------------------------------*/
+
+// When USB is idle
 void no_action();
-void Receive_Key();
-void Send_Key();
+
+// To exchange Public Key with HOST
+void Exchange_Public_Key();
+
+// Receive signed string and confirm if it is correct string or not
 void Receive_String();
+
+// Send the signed string to DEVICE
 void Send_String();
-void send_fingerprint();
+
+// To handle FingerPrint cmds
+void HandleFingerprint();
+
+// To continoulsy check if the DEVICE is connected to the host or not
 void Send_Status();
 /*-----------------------------END Function Prototypes------------------------------------*/
 
+// function handler to directly use the functions according to the operation to be performed
 const function_handler Operations[7] = {
 	no_action,
-	Receive_Key,
-	Send_Key,
+	Exchange_Public_Key,
 	Receive_String,
 	Send_String,
-	send_fingerprint,
+	HandleFingerprint,
 	Send_Status
 };
 
@@ -52,44 +83,46 @@ void no_action()
 	while(operation == NO_ACTION)
 	{
 		printf("NO Operation = %d\r\n", 10);
-		HAL_Delay(1000);
+//		HAL_Delay(1000);
+		// make it sleep somehow to help reduce power
 	}
 }
 
 /*
- * Receive Public Key from Host and process it
+ * Receive Public Key from Host and Then send Device Public Key
  */
 
-void Receive_Key()
+void Exchange_Public_Key()
 {
-	printf("In Receive Key\r\n");
+	printf("In Exchange Public Key\r\n");
+
+	//Generate Private and Public Keys
+	//Send Public Key
+
+	//Receive Public Key from HOST
 }
 
-/*
- * Send Public Key to Host
- */
-
-void Send_Key()
-{
-
-}
 void Receive_String()
 {
-
+	// Decrypt string
+	// compare string
+	// if correct string received from HOST continue
+	// else Error Led ON & put in no_action loop
 }
 void Send_String()
 {
-
+	// encrypt string
+	// Send to host
 }
-void send_fingerprint()
+void HandleFingerprint()
 {
-//	uint8_t fingeprint_id = GetFingerPrintID();
-
 
 }
+
 void Send_Status()
 {
 
+	send_report(report, len)
 }
 
 /*-----------------------------END Function Definitions------------------------------------*/

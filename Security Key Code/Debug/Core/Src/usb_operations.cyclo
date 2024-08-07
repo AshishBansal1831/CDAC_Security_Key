@@ -1,7 +1,7 @@
-../Core/Src/usb_operations.c:50:6:no_action	2
-../Core/Src/usb_operations.c:63:6:Receive_Key	1
-../Core/Src/usb_operations.c:72:6:Send_Key	1
-../Core/Src/usb_operations.c:76:6:Receive_String	1
-../Core/Src/usb_operations.c:80:6:Send_String	1
-../Core/Src/usb_operations.c:84:6:send_fingerprint	1
-../Core/Src/usb_operations.c:90:6:Send_Status	1
+../Core/Src/usb_operations.c:61:6:no_action	2
+../Core/Src/usb_operations.c:75:6:Exchange_Public_Key	1
+../Core/Src/usb_operations.c:85:6:Receive_String	1
+../Core/Src/usb_operations.c:92:6:Send_String	1
+../Core/Src/usb_operations.c:97:6:sendFingerPrint	1
+../Core/Src/usb_operations.c:102:6:newFingerPrint	1
+../Core/Src/usb_operations.c:107:6:Send_Status	1
