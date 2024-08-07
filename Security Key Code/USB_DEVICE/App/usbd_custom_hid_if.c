@@ -282,6 +282,9 @@ static int8_t CUSTOM_HID_OutEvent_FS(uint8_t event_idx, uint8_t state)
   /* USER CODE BEGIN 6 */
   UNUSED(event_idx);
   UNUSED(state);
+  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14);
+
+  printf("Recevied data\r\n");
 
   /* Start next USB packet transfer once data processing is completed */
   if (USBD_CUSTOM_HID_ReceivePacket(&hUsbDeviceFS) != (uint8_t)USBD_OK)

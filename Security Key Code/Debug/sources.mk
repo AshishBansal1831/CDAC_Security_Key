@@ -42,8 +42,10 @@ SUBDIRS := \
 Core/Src \
 Core/Startup \
 Drivers/STM32F4xx_HAL_Driver/Src \
+MBEDTLS/App \
 Middlewares/ST/STM32_USB_Device_Library/Class/CustomHID/Src \
 Middlewares/ST/STM32_USB_Device_Library/Core/Src \
+Middlewares/Third_Party/mbedTLS/library \
 USB_DEVICE/App \
 USB_DEVICE/Target \
 
