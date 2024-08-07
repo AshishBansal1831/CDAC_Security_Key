@@ -42,15 +42,16 @@ see https://www.gnu.org/licenses/.  */
 #ifndef __GMP_PLUSPLUS__
 #define __GMP_PLUSPLUS__
 
-#include <iosfwd>
+//#include <iosfwd>
 
-#include <cstring>  /* for strlen */
-#include <limits>  /* numeric_limits */
-#include <utility>
-#include <algorithm>  /* swap */
-#include <string>
-#include <stdexcept>
-#include <cfloat>
+#include <string>  /* for strlen */
+#include <string.h>  /* for strlen */
+#include <limits.h>  /* numeric_limits */
+//#include <utility>
+//#include <algorithm>  /* swap */
+//#include <string>
+//#include <stdexcept>
+#include <float.h>
 #include <gmp.h>
 
 // wrapper for gcc's __builtin_constant_p
