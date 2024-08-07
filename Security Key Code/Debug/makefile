@@ -91,8 +91,8 @@ all: main-build
 main-build: Security_Key.elf secondary-outputs
 
 # Tool invocations
-Security_Key.elf Security_Key.map: $(OBJS) $(USER_OBJS) D:\CDAC\CDAC-Project\Security\ Key\ Code\STM32F407VGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-g++ -o "Security_Key.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"D:\CDAC\CDAC-Project\Security Key Code\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Security_Key.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+Security_Key.elf Security_Key.map: $(OBJS) $(USER_OBJS) D:\CDAC\CDAC-Project\Security\ Key\mbedTLS\CDAC_Security_Key\Security\ Key\ Code\STM32F407VGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-g++ -o "Security_Key.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"D:\CDAC\CDAC-Project\Security Key\mbedTLS\CDAC_Security_Key\Security Key Code\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Security_Key.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

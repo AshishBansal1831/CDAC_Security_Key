@@ -20,13 +20,12 @@
 
 typedef enum
 {
-    NO_ACTION,
-    RECEIVE_KEY,
-    SEND_KEY,
-    RECEIVE_STRING,
-    SEND_STRING,
-    SEND_FINGERPRINT,
-    STATUS_CHECK
+    NO_ACTION,				// When No actions to be performed
+    EXCHANGE_PUBLIC_KEY,	// To exchange the public keys
+    SIGNED_STRING_D2H,		// TO send Signed String from Device to HOST machine
+	SIGNED_STRING_H2D,		// To get Signed String from HOSt
+    CMD_FINGERPRINT,		// TO Handle FingerPrint Cmds, next byte contains the cmd to be executed
+    STATUS_CHECK			// To check if the device is connected or not
 } USB_OPERATIONS;
 
 
