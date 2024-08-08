@@ -53,9 +53,12 @@ UART_HandleTypeDef huart4;
 /* USER CODE BEGIN PV */
 uint8_t endpoint_num;
 extern PCD_HandleTypeDef hpcd_USB_OTG_FS;
-extern function_handler Operations[7];
+extern function_handler Operations[];
 extern USB_OPERATIONS operation;
 uint8_t *report_buffer = NULL;
+
+extern Report IN_;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -79,11 +82,7 @@ int8_t send_report(uint8_t* report, uint16_t len);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	char hid_report[REPORT_BUF_SIZE];
-	for(uint8_t i=1; i<sizeof(hid_report); ++i)
-	{
-		hid_report[i] = i;
-	}
+
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -115,31 +114,38 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-//	  Operations[operation]();
+	  Operations[operation]();
 
 //	  report_buffer[1] = 0;
-	  HAL_Delay(2000);
+//	  HAL_Delay(10);
 //	  hid_report[0] = 0x02; // Report ID
 //	 hid_report[1] = 0xAB; // Example data
 //	 hid_report[2] = 0xCD; // Example data
 	 // ... fill other bytes as needed
 
+
+
 	 // Send the report to the host
 //	 send_report((uint8_t*)hid_report, sizeof(hid_report));
 
-	  if(operation == 0x01)
-	  {
-		  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
-		  if(strncmp((char*)report_buffer, "Ashish Bansal", 13) == 0)
-		  {
-			  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14);
-		  }
-	  }
-	  else if(operation == 'B')
-	  {
-		  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_13);
-	  }
-	  operation = NO_ACTION;
+//	  if(IN_.report_id != NO_ACTION)
+//	  {
+////		  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
+//		  send_report((uint8_t*)&In, sizeof(In));
+////		  In.report_id++;
+//		  IN_.report_id = NO_ACTION;
+//	  }
+
+//	  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14);
+
+//	  else if(operation == 'B')
+//	  {
+//		  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_13);
+//	  }
+
+
+
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

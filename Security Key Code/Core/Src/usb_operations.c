@@ -23,12 +23,7 @@
 
 
 /*---------------------------Typedefs & Structures------------------------------*/
-typedef struct
-{
-	USB_OPERATIONS 	report_id;
-	uint8_t 		paramter;
-	char 			data[SIGNED_STRING_SIZE];
-}Report;
+
 /*-------------------------END Typedefs & Structures----------------------------*/
 
 /*-------------------------------Extern Variables--------------------------------------*/
@@ -40,7 +35,7 @@ extern int8_t send_report(uint8_t* report, uint16_t len);
 
 /*-------------------------------Variables--------------------------------------*/
 const UART_HandleTypeDef *FingerPrint = &huart4;
-
+Report IN_;
 USB_OPERATIONS operation = NO_ACTION;
 
 const char *HOST_STRING   = "this string from host signed using Device Public Key";
@@ -64,6 +59,8 @@ void Exchange_Public_Key();
 // Receive signed string and confirm if it is correct string or not
 void Receive_String();
 
+void Handle_Signed_String();
+
 // Send the signed string to DEVICE
 void Send_String();
 
@@ -75,11 +72,10 @@ void Send_Status();
 /*-----------------------------END Function Prototypes------------------------------------*/
 
 // function handler to directly use the functions according to the operation to be performed
-const function_handler Operations[7] = {
+const function_handler Operations[] = {
 	no_action,
 	Exchange_Public_Key,
-	Receive_String,
-	Send_String,
+	Handle_Signed_String,
 	HandleFingerprint,
 	Send_Status
 };
@@ -101,10 +97,13 @@ void no_action()
 {
 	while(operation == NO_ACTION)
 	{
-		printf("NO Operation = %d\r\n", 10);
+//		printf("NO Operation = %d\r\n", 10);
 //		HAL_Delay(1000);
+//		HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
 		// make it sleep somehow to help reduce power
 	}
+
+
 }
 
 /*
@@ -115,17 +114,18 @@ void Exchange_Public_Key()
 {
 	printf("In Exchange Public Key\r\n");
 	Report report;
-
+	HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
 	report.report_id = EXCHANGE_PUBLIC_KEY;
 	strcpy(report.data, "Device Public Key");
 	//Generate Private and Public Keys
-#if 0
+#if 1
 	int ret;
 	const char* pers = "Ashish Bansal";
 	mbedtls_rsa_context rsa;
 	mbedtls_ctr_drbg_context ctr_drbg;
 	mbedtls_entropy_context entropy;
 
+	mbedtls_rsa_init(&rsa, MBEDTLS_RSA_PKCS_V15, 0);
 	mbedtls_rsa_init(&rsa, MBEDTLS_RSA_PKCS_V15, 0);
 
 	// Seed the random number generator
@@ -137,9 +137,13 @@ void Exchange_Public_Key()
 
 	mbedtls_rsa_gen_key(&rsa, mbedtls_ctr_drbg_random, &ctr_drbg, 512, 65537);
 
-	size_t pub_key_len = sizeof(report.data);
-	ret = mbedtls_rsa_export_pubkey(&rsa, report.data, &pub_key_len);
-	mbedtls_rsa_export(ctx, N, P, Q, D, E)
+//	size_t pub_key_len = sizeof(report.data);
+//	ret = mbedtls_rsa_export_pubkey(&rsa, report.data, &pub_key_len);
+
+	mbedtls_mpi modulas, exponent;
+
+mbedtls_mpi_copy(&modulas, &rsa.N);
+mbedtls_mpi_copy(&exponent, &rsa.E);
 
 	if (ret != 0) {
 		printf("Failed to export public key: -0x%x\n", -ret);
@@ -184,6 +188,11 @@ void Send_String()
 	Send_to_Host(string_report);
 }
 
+void Handle_Signed_String()
+{
+
+}
+
 /*
  * To handle FingerPrint COMMANDs
  */
@@ -197,7 +206,10 @@ void HandleFingerprint()
  */
 void Send_Status()
 {
-	Report report = {STATUS_CHECK, 0, {0}};
+	HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
+	Report report = {STATUS_CHECK, 0, "Connected"};
+	uint16_t i = 0;
+	while(i<20000)
 	Send_to_Host(report);
 }
 
