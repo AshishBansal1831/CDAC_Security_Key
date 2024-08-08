@@ -149,7 +149,6 @@ int main(void)
   uint8_t finger_status = Is_Finger_Pressed();
   HAL_UART_Transmit(&huart4, &finger_status, 1, 2000);
   /* USER CODE END 2 */
-  Open_Fingerprint_Module();
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
