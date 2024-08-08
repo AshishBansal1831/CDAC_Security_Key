@@ -31,7 +31,7 @@
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-
+extern USB_OPERATIONS operation;
 /* USER CODE END PV */
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
@@ -143,7 +143,7 @@ __ALIGN_BEGIN static uint8_t CUSTOM_HID_ReportDesc_FS[USBD_CUSTOM_HID_REPORT_DES
 	    0xA1, 0x01,              // Collection (Application)
 
 	    // Report ID 1: Status Check Command (1 byte, byte-aligned)
-		0x85, 0x01,				 // report ID 1
+		0x85, 0x04,				 // report ID 1
 	    0x09, 0x01,              // Usage (Vendor Defined Usage 9)
 	    0x15, 0x00,              // Logical Minimum (0)
 	    0x26, 0x01, 0x00,        // Logical Maximum (255)
@@ -170,7 +170,7 @@ __ALIGN_BEGIN static uint8_t CUSTOM_HID_ReportDesc_FS[USBD_CUSTOM_HID_REPORT_DES
 	    0x81, 0x00,              // Input (Data, Variable)
 
 		// Report ID 4: Public Key IN Transfer (64 bytes, byte-aligned)
-		0x85, 0x04,				 // report ID 4
+		0x85, 0x01,				 // report ID 4
 	    0x09, 0x01,              // Usage (Vendor Defined Usage 2)
 	    0x15, 0x00,              // Logical Minimum (0)
 	    0x26, 0xFF, 0x00,        // Logical Maximum (255)
@@ -282,9 +282,6 @@ static int8_t CUSTOM_HID_OutEvent_FS(uint8_t event_idx, uint8_t state)
   /* USER CODE BEGIN 6 */
   UNUSED(event_idx);
   UNUSED(state);
-  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14);
-
-  printf("Recevied data\r\n");
 
   /* Start next USB packet transfer once data processing is completed */
   if (USBD_CUSTOM_HID_ReceivePacket(&hUsbDeviceFS) != (uint8_t)USBD_OK)

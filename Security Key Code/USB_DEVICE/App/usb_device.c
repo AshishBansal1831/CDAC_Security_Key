@@ -80,6 +80,10 @@ void MX_USB_DEVICE_Init(void)
   {
     Error_Handler();
   }
+
+	USBD_LL_OpenEP(&hUsbDeviceFS, 0x01, USBD_EP_TYPE_BULK, 64);
+	USBD_LL_OpenEP(&hUsbDeviceFS, 0x81, USBD_EP_TYPE_BULK, 64);
+
   if (USBD_Start(&hUsbDeviceFS) != USBD_OK)
   {
     Error_Handler();

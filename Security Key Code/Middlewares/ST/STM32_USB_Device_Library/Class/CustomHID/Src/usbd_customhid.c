@@ -46,12 +46,14 @@ EndBSPDependencies */
 #include "usbd_customhid.h"
 #include "usbd_ctlreq.h"
 
-
+#include "usb_operations.h"
 /** @addtogroup STM32_USB_DEVICE_LIBRARY
   * @{
   */
 
-
+extern USB_OPERATIONS operation;
+extern uint8_t* report_buffer;
+extern Report IN_;
 /** @defgroup USBD_CUSTOM_HID
   * @brief usbd core module
   * @{
@@ -155,7 +157,7 @@ __ALIGN_BEGIN static uint8_t USBD_CUSTOM_HID_CfgDesc[USB_CUSTOM_HID_CONFIG_DESC_
   USB_DESC_TYPE_INTERFACE,                            /* bDescriptorType: Interface descriptor type */
   0x00,                                               /* bInterfaceNumber: Number of Interface */
   0x00,                                               /* bAlternateSetting: Alternate setting */
-  0x02,                                               /* bNumEndpoints*/
+  0x04,                                               /* bNumEndpoints*/
   0x03,                                               /* bInterfaceClass: CUSTOM_HID */
   0x00,                                               /* bInterfaceSubClass : 1=BOOT, 0=no boot */
   0x00,                                               /* nInterfaceProtocol : 0=none, 1=keyboard, 2=mouse */
@@ -191,6 +193,24 @@ __ALIGN_BEGIN static uint8_t USBD_CUSTOM_HID_CfgDesc[USB_CUSTOM_HID_CONFIG_DESC_
   LOBYTE(CUSTOM_HID_EPOUT_SIZE),                      /* wMaxPacketSize: 2 Bytes max  */
   HIBYTE(CUSTOM_HID_EPOUT_SIZE),
   CUSTOM_HID_FS_BINTERVAL,                            /* bInterval: Polling Interval */
+
+	0x07,                                               /* bLength: Endpoint Descriptor size */
+	USB_DESC_TYPE_ENDPOINT,                             /* bDescriptorType: */
+
+	0x82,                               /* bEndpointAddress: Endpoint Address (IN) */
+	0x02,                                               /* bmAttributes: Interrupt endpoint */
+	LOBYTE(64),                       /* wMaxPacketSize: 2 Bytes max */
+	HIBYTE(64),
+	0x00,                            /* bInterval: Polling Interval */
+	/* 34 */
+
+	0x07,                                               /* bLength: Endpoint Descriptor size */
+	USB_DESC_TYPE_ENDPOINT,                             /* bDescriptorType: */
+	0x02,                              /* bEndpointAddress: Endpoint Address (OUT) */
+	0x02,                                               /* bmAttributes: Interrupt endpoint */
+	LOBYTE(64),                      /* wMaxPacketSize: 2 Bytes max  */
+	HIBYTE(64),
+	0x00,                            /* bInterval: Polling Interval */
   /* 41 */
 };
 #endif /* USE_USBD_COMPOSITE  */
@@ -691,6 +711,16 @@ static uint8_t USBD_CUSTOM_HID_DataOut(USBD_HandleTypeDef *pdev, uint8_t epnum)
 
   hhid = (USBD_CUSTOM_HID_HandleTypeDef *)pdev->pClassDataCmsit[pdev->classId];
 
+  // Handle the OUT endpoint
+  operation = hhid->Report_buf[0];
+  IN_ 		= *(Report*) hhid->Report_buf;
+
+  if(operation != NO_ACTION)
+  {
+	  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_13);
+  }
+
+//  report_buffer = hhid->Report_buf+2;
   /* USB data will be immediately processed, this allow next USB traffic being
   NAKed till the end of the application processing */
   ((USBD_CUSTOM_HID_ItfTypeDef *)pdev->pUserData[pdev->classId])->OutEvent(hhid->Report_buf[0],

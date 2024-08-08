@@ -1,7 +1,8 @@
-../Core/Src/usb_operations.c:92:20:Send_to_Host	8	static
-../Core/Src/usb_operations.c:100:6:no_action	8	static
-../Core/Src/usb_operations.c:114:6:Exchange_Public_Key	144	static
-../Core/Src/usb_operations.c:165:6:Receive_String	4	static
-../Core/Src/usb_operations.c:176:6:Send_String	144	static
-../Core/Src/usb_operations.c:190:6:HandleFingerprint	4	static
-../Core/Src/usb_operations.c:198:6:Send_Status	144	static
+../Core/Src/usb_operations.c:88:20:Send_to_Host	8	static
+../Core/Src/usb_operations.c:96:6:no_action	4	static
+../Core/Src/usb_operations.c:113:6:Exchange_Public_Key	928	static
+../Core/Src/usb_operations.c:169:6:Receive_String	4	static
+../Core/Src/usb_operations.c:180:6:Send_String	128	static
+../Core/Src/usb_operations.c:191:6:Handle_Signed_String	4	static
+../Core/Src/usb_operations.c:199:6:HandleFingerprint	4	static
+../Core/Src/usb_operations.c:207:6:Send_Status	136	static
