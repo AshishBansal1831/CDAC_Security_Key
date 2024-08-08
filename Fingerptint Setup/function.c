@@ -8,7 +8,7 @@ void send_command(UART_HandleTypeDef *huart, packet *pkt) {
     pkt->start_byte = 0xF5;
     pkt->end_byte = 0xF5;
     pkt->checksum = calculate_checksum(pkt);
-    HAL_UART_Transmit(huart, (uint8_t *)pkt, sizeof(packet), HAL_MAX_DELAY);
+    HAL_UART_Transmit(huart, (uint8_t *)pkt, sizeof(packet), 2000);
 }
 
 uint8_t calculate_checksum(packet *pkt) {
@@ -39,7 +39,7 @@ uint8_t Is_Finger_Pressed(void) {
     send_command(&huart5, &pkt);
     
     uint8_t response;
-    HAL_UART_Receive(&huart5, &response, 1, HAL_MAX_DELAY);
+    HAL_UART_Receive(&huart5, &response, 8,2000);
     return response;
 }
 
@@ -63,7 +63,7 @@ uint8_t Get_User_Count(void) {
     send_command(&huart5, &pkt);
     
     uint8_t user_count;
-    HAL_UART_Receive(&huart5, &user_count, 1, HAL_MAX_DELAY);
+    HAL_UART_Receive(&huart5, &user_count, 8, 2000);
     return user_count;
 }
 
@@ -72,7 +72,7 @@ uint8_t Identify_Fingerprint(void) {
     send_command(&huart5, &pkt);
     
     uint8_t user_id;
-    HAL_UART_Receive(&huart5, &user_id, 1, HAL_MAX_DELAY);
+    HAL_UART_Receive(&huart5, &user_id, 8, 2000);
     return user_id;
 }
 
@@ -81,7 +81,7 @@ uint8_t Get_Entry_ID(void) {
     send_command(&huart5, &pkt);
     
     uint8_t entry_id;
-    HAL_UART_Receive(&huart5, &entry_id, 1, HAL_MAX_DELAY);
+    HAL_UART_Receive(&huart5, &entry_id, 8, 2000);
     return entry_id;
 }
 
