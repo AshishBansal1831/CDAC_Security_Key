@@ -12,12 +12,12 @@
 #include "usb_operations.h"
 #include "main.h"
 //#include "RSA.h"
-#include "mbedtls/rsa.h"
-#include "mbedtls/ctr_drbg.h"
-#include "mbedtls/entropy.h"
+#include "FingerPrint_Module.h"
+#include "LED.h"
 /*-----------------------------END INCLUDES-------------------------------------*/
 
 /*-------------------------------DEFINES----------------------------------------*/
+
 
 /*-----------------------------END DEFINES--------------------------------------*/
 
@@ -26,12 +26,14 @@
 
 /*-------------------------END Typedefs & Structures----------------------------*/
 
+
 /*-------------------------------Extern Variables--------------------------------------*/
 extern UART_HandleTypeDef huart4;
 extern uint8_t *report_buffer;
 extern int8_t send_report(uint8_t* report, uint16_t len);
 
 /*-----------------------------END Extern Variables------------------------------------*/
+
 
 /*-------------------------------Variables--------------------------------------*/
 const UART_HandleTypeDef *FingerPrint = &huart4;
@@ -80,6 +82,8 @@ const function_handler Operations[] = {
 	Send_Status
 };
 
+
+
 /*-------------------------------Function Definitions--------------------------------------*/
 
 /*
@@ -97,13 +101,8 @@ void no_action()
 {
 	while(operation == NO_ACTION)
 	{
-//		printf("NO Operation = %d\r\n", 10);
-//		HAL_Delay(1000);
-//		HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
-		// make it sleep somehow to help reduce power
+
 	}
-
-
 }
 
 /*
@@ -118,7 +117,7 @@ void Exchange_Public_Key()
 	report.report_id = EXCHANGE_PUBLIC_KEY;
 	strcpy(report.data, "Device Public Key");
 	//Generate Private and Public Keys
-#if 1
+#if 0
 	int ret;
 	const char* pers = "Ashish Bansal";
 	mbedtls_rsa_context rsa;
@@ -170,6 +169,12 @@ void Receive_String()
 {
 	// Decrypt string
 	// compare string
+	while(IN_.report_id == 0);
+	if(strcmp((char*)IN_.data, HOST_STRING) !=0)
+	{
+		Error_Occured();
+	}
+
 	// if correct string received from HOST continue
 	// else Error Led ON & put in no_action loop
 }
@@ -181,6 +186,7 @@ void Send_String()
 {
 	Report string_report;
 	string_report.report_id = SIGNED_STRING;
+
 	strncpy((char*)string_report.data, DEVICE_STRING, strlen(DEVICE_STRING));
 	// encrypt string
 
@@ -190,7 +196,9 @@ void Send_String()
 
 void Handle_Signed_String()
 {
-
+	Send_String();
+	memset((void*)&IN_, 0, sizeof(IN_));
+	Receive_String();
 }
 
 /*
@@ -198,7 +206,27 @@ void Handle_Signed_String()
  */
 void HandleFingerprint()
 {
+	Report Out=  {.report_id = IN_.report_id, .paramter = IN_.paramter};
 
+	switch(IN_.paramter)
+	{
+	case F_IDENTITFY:
+		Out.data[0] = Identify_Fingerprint();
+		break;
+	case F_ENROLL:
+		Out.data[0] = Get_EntryID();
+		Enroll_Fingerprint(Out.data[0]);
+		break;
+	case F_ENROLL_C:
+		Enroll_Cancel();
+		break;
+	case F_DELETE:
+		Delete_Fingerprint_ID(IN_.data[0]);
+		break;
+	case F_DEL_ALL:
+		Delete_All_Fingerprints();
+		break;
+	}
 }
 
 /*
@@ -209,7 +237,7 @@ void Send_Status()
 	HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
 	Report report = {STATUS_CHECK, 0, "Connected"};
 	uint16_t i = 0;
-	while(i<20000)
+	while(i<20)
 	Send_to_Host(report);
 }
 

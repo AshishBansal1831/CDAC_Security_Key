@@ -5,6 +5,6 @@
 ../Core/Src/LED.c:40:20:BlueON	8	static
 ../Core/Src/LED.c:45:20:BlueOFF	8	static
 ../Core/Src/LED.c:59:6:Error_Occured	8	static
-../Core/Src/LED.c:66:6:Hard_Fault_Occured	8	static
-../Core/Src/LED.c:77:6:Everything_OK	8	static
-../Core/Src/LED.c:81:6:ON_Going	8	static
+../Core/Src/LED.c:69:6:Hard_Fault_Occured	8	static
+../Core/Src/LED.c:80:6:Everything_OK	8	static
+../Core/Src/LED.c:85:6:ON_Going	8	static

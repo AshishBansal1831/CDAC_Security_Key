@@ -58,9 +58,12 @@ void ON_Going();
 
 void Error_Occured()
 {
-	ALL_OK.OFF();
-	OnGoing.OFF();
-	Error.ON();
+	while(1)
+	{
+		ALL_OK.OFF();
+		OnGoing.OFF();
+		Error.ON();
+	}
 }
 
 void Hard_Fault_Occured()
@@ -78,6 +81,7 @@ void Everything_OK()
 {
 	ALL_OK.ON();
 }
+
 void ON_Going()
 {
 	static uint8_t state = 0;

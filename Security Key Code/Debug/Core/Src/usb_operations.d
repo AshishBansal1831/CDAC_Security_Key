@@ -29,15 +29,7 @@ Core/Src/usb_operations.o: ../Core/Src/usb_operations.c \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
- ../Middlewares/Third_Party/mbedTLS/include/mbedtls/rsa.h \
- ../MBEDTLS/App/mbedtls_config.h \
- ../Middlewares/Third_Party/mbedTLS/include/mbedtls/check_config.h \
- ../Middlewares/Third_Party/mbedTLS/include/mbedtls/bignum.h \
- ../Middlewares/Third_Party/mbedTLS/include/mbedtls/md.h \
- ../Middlewares/Third_Party/mbedTLS/include/mbedtls/ctr_drbg.h \
- ../Middlewares/Third_Party/mbedTLS/include/mbedtls/aes.h \
- ../Middlewares/Third_Party/mbedTLS/include/mbedtls/entropy.h \
- ../Middlewares/Third_Party/mbedTLS/include/mbedtls/sha512.h
+ ../Core/Inc/FingerPrint_Module.h ../Core/Inc/LED.h
 ../Core/Inc/usb_operations.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
@@ -69,12 +61,5 @@ Core/Src/usb_operations.o: ../Core/Src/usb_operations.c \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h:
-../Middlewares/Third_Party/mbedTLS/include/mbedtls/rsa.h:
-../MBEDTLS/App/mbedtls_config.h:
-../Middlewares/Third_Party/mbedTLS/include/mbedtls/check_config.h:
-../Middlewares/Third_Party/mbedTLS/include/mbedtls/bignum.h:
-../Middlewares/Third_Party/mbedTLS/include/mbedtls/md.h:
-../Middlewares/Third_Party/mbedTLS/include/mbedtls/ctr_drbg.h:
-../Middlewares/Third_Party/mbedTLS/include/mbedtls/aes.h:
-../Middlewares/Third_Party/mbedTLS/include/mbedtls/entropy.h:
-../Middlewares/Third_Party/mbedTLS/include/mbedtls/sha512.h:
+../Core/Inc/FingerPrint_Module.h:
+../Core/Inc/LED.h:

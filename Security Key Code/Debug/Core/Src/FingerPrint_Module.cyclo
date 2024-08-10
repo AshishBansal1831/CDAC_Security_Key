@@ -1,0 +1,14 @@
+../Core/Src/FingerPrint_Module.c:9:13:send_command	1
+../Core/Src/FingerPrint_Module.c:16:15:RecevieAck	1
+../Core/Src/FingerPrint_Module.c:23:9:calculate_checksum	2
+../Core/Src/FingerPrint_Module.c:33:6:Open_Fingerprint_Module	1
+../Core/Src/FingerPrint_Module.c:39:6:Close_Fingerprint_Module	1
+../Core/Src/FingerPrint_Module.c:45:6:LED_Control_Fingerprint_Module	1
+../Core/Src/FingerPrint_Module.c:51:9:Is_Finger_Pressed	1
+../Core/Src/FingerPrint_Module.c:60:6:Enroll_Fingerprint	2
+../Core/Src/FingerPrint_Module.c:73:6:Delete_Fingerprint_ID	1
+../Core/Src/FingerPrint_Module.c:79:6:Delete_All_Fingerprints	1
+../Core/Src/FingerPrint_Module.c:85:9:Get_User_Count	1
+../Core/Src/FingerPrint_Module.c:94:9:Identify_Fingerprint	4
+../Core/Src/FingerPrint_Module.c:113:9:Get_EntryID	1
+../Core/Src/FingerPrint_Module.c:122:6:Enroll_Cancel	1
