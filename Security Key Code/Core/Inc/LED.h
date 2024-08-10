@@ -8,6 +8,9 @@
 #ifndef INC_LED_H_
 #define INC_LED_H_
 
-void
+void Error_Occured();
+void Hard_Fault_Occured();
+void Everything_OK();
+void ON_Going();
 
 #endif /* INC_LED_H_ */
