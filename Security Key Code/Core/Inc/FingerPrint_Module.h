@@ -38,7 +38,8 @@ typedef enum {
 } Command;
 
 // Structure for the command packet
-typedef struct {
+typedef struct __packed
+{
     uint8_t start_byte;
     Command command;
     uint8_t parameter[4];
@@ -53,7 +54,7 @@ void Open_Fingerprint_Module(void);
 void Close_Fingerprint_Module(void);
 void LED_Control_Fingerprint_Module(uint8_t state);
 uint8_t Is_Finger_Pressed(void);
-void Enroll_Fingerprint(uint8_t ID);
+uint8_t Enroll_Fingerprint(uint8_t ID);
 void Delete_Fingerprint_ID(uint8_t ID);
 void Delete_All_Fingerprints(void);
 uint8_t Get_User_Count(void);

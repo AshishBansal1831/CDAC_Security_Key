@@ -18,7 +18,6 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "mbedtls.h"
 #include "usb_device.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -29,6 +28,8 @@
 #include "usb_operations.h"
 #include "stm32f4xx_ll_usb.h"
 #include "stm32f4xx_hal_def.h"
+#include "usb_operations.h"
+#include "FingerPrint_Module.h"
 //#include "wolfcrypt/rsa.h"
 /* USER CODE END Includes */
 
@@ -48,6 +49,8 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+RNG_HandleTypeDef hrng;
+
 UART_HandleTypeDef huart4;
 UART_HandleTypeDef huart5;
 
@@ -59,6 +62,9 @@ extern USB_OPERATIONS operation;
 uint8_t *report_buffer = NULL;
 
 extern Report IN_;
+extern uint8_t receive_flag;
+uint8_t data;
+extern uint8_t receive_buff[sizeof(Packet)];
 
 /* USER CODE END PV */
 
@@ -67,9 +73,10 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_UART4_Init(void);
 static void MX_UART5_Init(void);
+static void MX_RNG_Init(void);
 /* USER CODE BEGIN PFP */
 int8_t send_report(uint8_t* report, uint16_t len);
-
+extern void Open_Fingerprint_Module(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -107,47 +114,21 @@ int main(void)
   MX_GPIO_Init();
   MX_USB_DEVICE_Init();
   MX_UART4_Init();
-  MX_MBEDTLS_Init();
   MX_UART5_Init();
+  MX_RNG_Init();
   /* USER CODE BEGIN 2 */
-
+  Open_Fingerprint_Module();
+  HAL_UART_Receive_IT(&huart5, (uint8_t*)&data, 1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+
+//	  printf("Operation = %d\r\n", operation);
 	  Operations[operation]();
-
-//	  report_buffer[1] = 0;
-//	  HAL_Delay(10);
-//	  hid_report[0] = 0x02; // Report ID
-//	 hid_report[1] = 0xAB; // Example data
-//	 hid_report[2] = 0xCD; // Example data
-	 // ... fill other bytes as needed
-
-
-
-	 // Send the report to the host
-//	 send_report((uint8_t*)hid_report, sizeof(hid_report));
-
-//	  if(IN_.report_id != NO_ACTION)
-//	  {
-////		  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
-//		  send_report((uint8_t*)&In, sizeof(In));
-////		  In.report_id++;
-//		  IN_.report_id = NO_ACTION;
-//	  }
-
-//	  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14);
-
-//	  else if(operation == 'B')
-//	  {
-//		  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_13);
-//	  }
-
-
-
+	  HAL_Delay(50);
 
     /* USER CODE END WHILE */
 
@@ -199,6 +180,32 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+}
+
+/**
+  * @brief RNG Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_RNG_Init(void)
+{
+
+  /* USER CODE BEGIN RNG_Init 0 */
+
+  /* USER CODE END RNG_Init 0 */
+
+  /* USER CODE BEGIN RNG_Init 1 */
+
+  /* USER CODE END RNG_Init 1 */
+  hrng.Instance = RNG;
+  if (HAL_RNG_Init(&hrng) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN RNG_Init 2 */
+
+  /* USER CODE END RNG_Init 2 */
+
 }
 
 /**
@@ -312,12 +319,33 @@ static void MX_GPIO_Init(void)
 int _write(int file, char *ptr, int len)
 {
 #ifdef DEBUG //this is defined if we are using DEBUG build configuration
-	HAL_UART_Transmit(&huart4, (uint8_t*)ptr, len, 100);
+	HAL_UART_Transmit(&huart5, (uint8_t*)ptr, len, 100);
 	return len;
 #else //if not defined don't send any data
 	return 0;
 #endif
 }
+
+
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+	if(receive_flag == 8)
+	{
+		receive_flag = 0;
+	}
+//	printf("In interrupt %d %x\r\n", receive_flag, data);
+	HAL_UART_Receive_IT(huart, (uint8_t*)&data, 1);
+	if((receive_flag == 0 || receive_flag == 7) && data!=0xF5)
+	{
+		HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
+		return;
+	}
+
+	receive_buff[receive_flag] = data;
+	receive_flag += 1;
+}
+
 /* USER CODE END 4 */
 
 /**

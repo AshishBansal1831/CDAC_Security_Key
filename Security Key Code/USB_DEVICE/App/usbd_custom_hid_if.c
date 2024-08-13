@@ -31,7 +31,7 @@
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
-extern USB_OPERATIONS operation;
+
 /* USER CODE END PV */
 
 /** @addtogroup STM32_USB_OTG_DEVICE_LIBRARY
@@ -143,58 +143,58 @@ __ALIGN_BEGIN static uint8_t CUSTOM_HID_ReportDesc_FS[USBD_CUSTOM_HID_REPORT_DES
 	    0xA1, 0x01,              // Collection (Application)
 
 	    // Report ID 1: Status Check Command (1 byte, byte-aligned)
-		0x85, 0x04,				 // report ID 1
+//		0x85, 0x04,				 // report ID 1
 	    0x09, 0x01,              // Usage (Vendor Defined Usage 9)
 	    0x15, 0x00,              // Logical Minimum (0)
 	    0x26, 0x01, 0x00,        // Logical Maximum (255)
 	    0x75, 0x08,              // Report Size (8 bits)
-	    0x95, STATUS_CMD_SIZE,   // Report Count (1 byte)
+	    0x95, 62,   // Report Count (1 byte)
 	    0x81, 0x02,              // Input (Data, Variable)
 
 		// Report ID 2: Request Fingerprint CMD (1 byte, byte-aligned)
-		0x85, 0x02,				 // report ID 2
-		0x09, 0x02,              // Usage (Vendor Defined Usage 7)
-		0x15, 0x00,              // Logical Minimum (0)
-		0x26, 0x01, 0x00,        // Logical Maximum (255)
-		0x75, 0x08,              // Report Size (8 bits)
-		0x95, FP_CMD_SIZE,       // Report Count (1 byte)
-		0x81, 0x02,              // Input (Data, Variable)
-
-	    // Report ID 3: Public Key IN Transfer (64 bytes, byte-aligned)
-		0x85, 0x03,				 // report ID 3
-	    0x09, 0x01,              // Usage (Vendor Defined Usage 1)
-	    0x15, 0x00,              // Logical Minimum (0)
-	    0x26, 0xFF, 0x00,        // Logical Maximum (255)
-	    0x75, 0x08,              // Report Size (8 bits)
-	    0x95, PUBLIC_KEY_SIZE,   // Report Count (64 bytes)
-	    0x81, 0x00,              // Input (Data, Variable)
-
-		// Report ID 4: Public Key IN Transfer (64 bytes, byte-aligned)
-		0x85, 0x01,				 // report ID 4
-	    0x09, 0x01,              // Usage (Vendor Defined Usage 2)
-	    0x15, 0x00,              // Logical Minimum (0)
-	    0x26, 0xFF, 0x00,        // Logical Maximum (255)
-	    0x75, 0x08,              // Report Size (8 bits)
-	    0x95, PUBLIC_KEY_SIZE,              // Report Count (64 bytes)
-	    0x91, 0x00,              // Output (Data, Variable)
-
-	    // Report ID 5: Sign Data Request (64 bytes, byte-aligned)
-		0x85, 0x05,				 // report ID 5
-	    0x09, 0x02,              // Usage (Vendor Defined Usage 3)
-	    0x15, 0x00,              // Logical Minimum (0)
-	    0x26, 0xFF, 0x00,        // Logical Maximum (255)
-	    0x75, 0x08,              // Report Size (8 bits)
-	    0x95, SIGNED_STRING_SIZE,// Report Count (64 bytes)
-	    0x81, 0x00,              // Input (Data, Variable)
-
-		// Report ID 6: Sign Data Request (64 bytes, byte-aligned)
-		0x85, 0x06,				 // report ID 6
-	    0x09, 0x01,              // Usage (Vendor Defined Usage 4)
-	    0x15, 0x00,              // Logical Minimum (0)
-	    0x26, 0xFF, 0x00,        // Logical Maximum (255)
-	    0x75, 0x08,              // Report Size (8 bits)
-	    0x95, SIGNED_STRING_SIZE,// Report Count (64 bytes)
-	    0x91, 0x00,              // Output (Data, Variable)
+//		0x85, 0x02,				 // report ID 2
+//		0x09, 0x02,              // Usage (Vendor Defined Usage 7)
+//		0x15, 0x00,              // Logical Minimum (0)
+//		0x26, 0x01, 0x00,        // Logical Maximum (255)
+//		0x75, 0x08,              // Report Size (8 bits)
+//		0x95, PUBLIC_KEY_SIZE,       // Report Count (1 byte)
+//		0x81, 0x02,              // Input (Data, Variable)
+//
+//	    // Report ID 3: Public Key IN Transfer (64 bytes, byte-aligned)
+//		0x85, 0x03,				 // report ID 3
+//	    0x09, 0x01,              // Usage (Vendor Defined Usage 1)
+//	    0x15, 0x00,              // Logical Minimum (0)
+//	    0x26, 0xFF, 0x00,        // Logical Maximum (255)
+//	    0x75, 0x08,              // Report Size (8 bits)
+//	    0x95, PUBLIC_KEY_SIZE,   // Report Count (64 bytes)
+//	    0x81, 0x02,              // Input (Data, Variable)
+//
+//		// Report ID 4: Public Key IN Transfer (64 bytes, byte-aligned)
+//		0x85, 0x01,				 // report ID 4
+//	    0x09, 0x01,              // Usage (Vendor Defined Usage 2)
+//	    0x15, 0x00,              // Logical Minimum (0)
+//	    0x26, 0xFF, 0x00,        // Logical Maximum (255)
+//	    0x75, 0x08,              // Report Size (8 bits)
+//	    0x95, PUBLIC_KEY_SIZE,              // Report Count (64 bytes)
+//	    0x91, 0x02,              // Output (Data, Variable)
+//
+//	    // Report ID 5: Sign Data Request (64 bytes, byte-aligned)
+//		0x85, 0x05,				 // report ID 5
+//	    0x09, 0x02,              // Usage (Vendor Defined Usage 3)
+//	    0x15, 0x00,              // Logical Minimum (0)
+//	    0x26, 0xFF, 0x00,        // Logical Maximum (255)
+//	    0x75, 0x08,              // Report Size (8 bits)
+//	    0x95, SIGNED_STRING_SIZE,// Report Count (64 bytes)
+//	    0x81, 0x02,              // Input (Data, Variable)
+//
+//		// Report ID 6: Sign Data Request (64 bytes, byte-aligned)
+//		0x85, 0x06,				 // report ID 6
+//	    0x09, 0x01,              // Usage (Vendor Defined Usage 4)
+//	    0x15, 0x00,              // Logical Minimum (0)
+//	    0x26, 0xFF, 0x00,        // Logical Maximum (255)
+//	    0x75, 0x08,              // Report Size (8 bits)
+//	    0x95, SIGNED_STRING_SIZE,// Report Count (64 bytes)
+//	    0x91, 0x02,              // Output (Data, Variable)
 
   /* USER CODE END 0 */
   0xC0    /*     END_COLLECTION	             */

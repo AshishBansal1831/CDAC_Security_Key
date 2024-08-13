@@ -14,19 +14,17 @@
 
 #define REPORT_BUF_SIZE		64	// in bytes
 
-#define PUBLIC_KEY_SIZE 	64 	// in bytes
-#define SIGNED_STRING_SIZE 	64 	// in bytes
+#define PUBLIC_KEY_SIZE 	62 	// in bytes
+#define SIGNED_STRING_SIZE 	62 	// in bytes
 
-#define FP_CMD_SIZE			64	// in bytes
-#define STATUS_CMD_SIZE		64 	// in bytes
-
-#define CMD_SIZE			64	// in bytes
+#define FP_CMD_SIZE			62	// in bytes
+#define STATUS_CMD_SIZE		62 	// in bytes
+#define CMD_SIZE			62	// in bytes
 
 typedef enum
 {
     NO_ACTION,				// When No actions to be performed
-    EXCHANGE_PUBLIC_KEY,	// To exchange the public keys
-    SIGNED_STRING,		// TO send and receive Signed String from/to HOST machine
+    ENCODE_STRING,			// TO send and receive Signed String from/to HOST machine
     CMD_FINGERPRINT,		// TO Handle FingerPrint Cmds, next byte contains the cmd to be executed
     STATUS_CHECK			// To check if the device is connected or not
 } USB_OPERATIONS;
@@ -36,6 +34,7 @@ typedef enum
 	DEV_TO_HOST,
 	HOST_TO_DEV,
 	F_IDENTITFY,
+	F_NEWID,
 	F_ENROLL,
 	F_ENROLL_C,
 	F_DELETE,
@@ -45,7 +44,7 @@ typedef enum
 typedef struct
 {
 	USB_OPERATIONS 	report_id;
-	uint8_t 		paramter;
+	PARAMETERS 		parameter;
 	char 			data[62];
 }Report;
 
