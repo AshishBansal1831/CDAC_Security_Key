@@ -17,7 +17,7 @@
 /*-----------------------------END INCLUDES-------------------------------------*/
 
 /*-------------------------------DEFINES----------------------------------------*/
-
+#define KEY 10
 
 /*-----------------------------END DEFINES--------------------------------------*/
 
@@ -37,14 +37,12 @@ extern int8_t send_report(uint8_t* report, uint16_t len);
 
 /*-------------------------------Variables--------------------------------------*/
 const UART_HandleTypeDef *FingerPrint = &huart4;
+
 Report IN_;
 USB_OPERATIONS operation = NO_ACTION;
 
-const char *HOST_STRING   = "this string from host signed using Device Public Key";
-const char *DEVICE_STRING = "this string from Device signed using HOST Public Key";
+const char *STRING = "Encode this string";
 
-static char HOST_Public_Key[PUBLIC_KEY_SIZE];
-static char DEVICE_Public_Key[PUBLIC_KEY_SIZE];
 /*-----------------------------END Variables------------------------------------*/
 
 
@@ -52,16 +50,15 @@ static char DEVICE_Public_Key[PUBLIC_KEY_SIZE];
 
 static inline void Send_to_Host(Report);
 
+
+
 // When USB is idle
 void no_action();
 
-// To exchange Public Key with HOST
-void Exchange_Public_Key();
-
-// Receive signed string and confirm if it is correct string or not
-void Receive_String();
-
-void Handle_Signed_String();
+/*
+ * Encode String and send to host
+ */
+void Encode_String();
 
 // Send the signed string to DEVICE
 void Send_String();
@@ -76,12 +73,10 @@ void Send_Status();
 // function handler to directly use the functions according to the operation to be performed
 const function_handler Operations[] = {
 	no_action,
-	Exchange_Public_Key,
-	Handle_Signed_String,
+	Encode_String,
 	HandleFingerprint,
 	Send_Status
 };
-
 
 
 /*-------------------------------Function Definitions--------------------------------------*/
@@ -99,106 +94,20 @@ static inline void Send_to_Host(Report report)
  */
 void no_action()
 {
-	while(operation == NO_ACTION)
+	printf("In no operation\r\n");
+	HAL_Delay(300);
+}
+
+void Encode_String()
+{
+	Report string_report = { .report_id = ENCODE_STRING};
+	printf("Handle_Signed_String\r\n");
+	for(int i=0; i<19; ++i)
 	{
-
+		string_report.data[i] = STRING[i]+KEY;
 	}
-}
-
-/*
- * Receive Public Key from Host and Then send Device Public Key
- */
-
-void Exchange_Public_Key()
-{
-	printf("In Exchange Public Key\r\n");
-	Report report;
-	HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
-	report.report_id = EXCHANGE_PUBLIC_KEY;
-	strcpy(report.data, "Device Public Key");
-	//Generate Private and Public Keys
-#if 0
-	int ret;
-	const char* pers = "Ashish Bansal";
-	mbedtls_rsa_context rsa;
-	mbedtls_ctr_drbg_context ctr_drbg;
-	mbedtls_entropy_context entropy;
-
-	mbedtls_rsa_init(&rsa, MBEDTLS_RSA_PKCS_V15, 0);
-	mbedtls_rsa_init(&rsa, MBEDTLS_RSA_PKCS_V15, 0);
-
-	// Seed the random number generator
-	ret = mbedtls_ctr_drbg_seed(&ctr_drbg, mbedtls_entropy_func, &entropy, (const unsigned char *) pers, strlen(pers));
-	if (ret != 0) {
-		printf("Failed to initialize RNG\n");
-		return;
-	}
-
-	mbedtls_rsa_gen_key(&rsa, mbedtls_ctr_drbg_random, &ctr_drbg, 512, 65537);
-
-//	size_t pub_key_len = sizeof(report.data);
-//	ret = mbedtls_rsa_export_pubkey(&rsa, report.data, &pub_key_len);
-
-	mbedtls_mpi modulas, exponent;
-
-mbedtls_mpi_copy(&modulas, &rsa.N);
-mbedtls_mpi_copy(&exponent, &rsa.E);
-
-	if (ret != 0) {
-		printf("Failed to export public key: -0x%x\n", -ret);
-		return;
-	}
-#endif
-	//Send Public Key
-
-	Send_to_Host(report);
-	operation = NO_ACTION;
-	strncpy(DEVICE_Public_Key, report.data, PUBLIC_KEY_SIZE);
-
-	//Receive Public Key from HOST
-	while(operation == NO_ACTION);
-
-	//save Host Public Key
-	strncpy(HOST_Public_Key, (char*)report_buffer, PUBLIC_KEY_SIZE);
-}
-
-/*
- * Receive signed string from HOST
- */
-void Receive_String()
-{
-	// Decrypt string
-	// compare string
-	while(IN_.report_id == 0);
-	if(strcmp((char*)IN_.data, HOST_STRING) !=0)
-	{
-		Error_Occured();
-	}
-
-	// if correct string received from HOST continue
-	// else Error Led ON & put in no_action loop
-}
-
-/*
- * Send signed string to HOST
- */
-void Send_String()
-{
-	Report string_report;
-	string_report.report_id = SIGNED_STRING;
-
-	strncpy((char*)string_report.data, DEVICE_STRING, strlen(DEVICE_STRING));
-	// encrypt string
-
-	// Send to host
 	Send_to_Host(string_report);
-}
-
-void Handle_Signed_String()
-{
-	Send_String();
-	memset((void*)&IN_, 0, sizeof(IN_));
-	Receive_String();
+	operation = NO_ACTION;
 }
 
 /*
@@ -206,16 +115,21 @@ void Handle_Signed_String()
  */
 void HandleFingerprint()
 {
-	Report Out=  {.report_id = IN_.report_id, .paramter = IN_.paramter};
+	printf("Inside HandleFingerprint %d %x\r\n", IN_.parameter, IN_.data[0]);
+//	HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
+	Report Out=  {.report_id = IN_.report_id, .parameter = IN_.parameter, .data = {0}};
 
-	switch(IN_.paramter)
+	switch(IN_.parameter)
 	{
 	case F_IDENTITFY:
 		Out.data[0] = Identify_Fingerprint();
 		break;
-	case F_ENROLL:
+	case F_NEWID:
 		Out.data[0] = Get_EntryID();
-		Enroll_Fingerprint(Out.data[0]);
+		break;
+	case F_ENROLL:
+		HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14);
+		Out.data[0] = Enroll_Fingerprint(IN_.data[0]);
 		break;
 	case F_ENROLL_C:
 		Enroll_Cancel();
@@ -226,7 +140,13 @@ void HandleFingerprint()
 	case F_DEL_ALL:
 		Delete_All_Fingerprints();
 		break;
+	case HOST_TO_DEV:
+	case DEV_TO_HOST:
 	}
+	Send_to_Host(Out);
+	printf("%x %x \r\n",Out.parameter, Out.data[0]);
+	HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
+	operation = NO_ACTION;
 }
 
 /*
@@ -234,11 +154,12 @@ void HandleFingerprint()
  */
 void Send_Status()
 {
-	HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
-	Report report = {STATUS_CHECK, 0, "Connected"};
+	printf("Inside Send_Status\r\n");
+//	HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
+	Report report = { .report_id = STATUS_CHECK, .data = "Co"};
 	uint16_t i = 0;
 	while(i<20)
-	Send_to_Host(report);
+		Send_to_Host(report);
 }
 
 /*-----------------------------END Function Definitions------------------------------------*/

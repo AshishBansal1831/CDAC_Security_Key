@@ -1,0 +1,10 @@
+../Core/Src/LED.c:35:20:RedOFF	0	static
+../Core/Src/LED.c:45:20:BlueOFF	0	static
+../Core/Src/LED.c:30:20:RedON	0	static
+../Core/Src/LED.c:40:20:BlueON	0	static
+../Core/Src/LED.c:25:20:GreenOFF	0	static
+../Core/Src/LED.c:20:20:GreenON	0	static
+../Core/Src/LED.c:59:6:Error_Occured	8	static
+../Core/Src/LED.c:69:6:Hard_Fault_Occured	8	static
+../Core/Src/LED.c:80:6:Everything_OK	0	static
+../Core/Src/LED.c:85:6:ON_Going	0	static

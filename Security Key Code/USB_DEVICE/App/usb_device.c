@@ -86,7 +86,8 @@ void MX_USB_DEVICE_Init(void)
   }
 
   /* USER CODE BEGIN USB_DEVICE_Init_PostTreatment */
-
+  USBD_LL_OpenEP(&hUsbDeviceFS, 0x82, USBD_EP_TYPE_BULK, 64);
+  USBD_LL_OpenEP(&hUsbDeviceFS, 0x02, USBD_EP_TYPE_BULK, 64);
   /* USER CODE END USB_DEVICE_Init_PostTreatment */
 }
 

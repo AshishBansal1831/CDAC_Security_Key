@@ -1,7 +1,4 @@
-../Core/Src/usb_operations.c:63:6:Receive_Key	0	static
-../Core/Src/usb_operations.c:50:6:no_action	16	static
-../Core/Src/usb_operations.c:90:6:Send_Status	0	static
-../Core/Src/usb_operations.c:72:6:Send_Key	0	static
-../Core/Src/usb_operations.c:76:6:Receive_String	0	static
-../Core/Src/usb_operations.c:80:6:Send_String	0	static
-../Core/Src/usb_operations.c:84:6:send_fingerprint	0	static
+../Core/Src/usb_operations.c:95:6:no_action	8	static
+../Core/Src/usb_operations.c:101:6:Encode_String	144	static
+../Core/Src/usb_operations.c:155:6:Send_Status	144	static
+../Core/Src/usb_operations.c:116:6:HandleFingerprint	152	static
