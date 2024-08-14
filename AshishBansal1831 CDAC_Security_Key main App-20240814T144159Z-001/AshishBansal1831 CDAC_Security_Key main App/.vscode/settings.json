@@ -1,9 +1,0 @@
-{
-    "files.associations": {
-        "login.h": "c",
-        "stdio.h": "c",
-        "evp.h": "c",
-        "aes.h": "c",
-        "ctype.h": "c"
-    }
-}
