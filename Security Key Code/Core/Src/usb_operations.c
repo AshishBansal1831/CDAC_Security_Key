@@ -17,7 +17,7 @@
 /*-----------------------------END INCLUDES-------------------------------------*/
 
 /*-------------------------------DEFINES----------------------------------------*/
-#define KEY 10
+#define KEY (10)
 
 /*-----------------------------END DEFINES--------------------------------------*/
 
@@ -37,11 +37,10 @@ extern int8_t send_report(uint8_t* report, uint16_t len);
 
 /*-------------------------------Variables--------------------------------------*/
 const UART_HandleTypeDef *FingerPrint = &huart4;
+const char *STRING = "Encode this string";
 
 Report IN_;
 USB_OPERATIONS operation = NO_ACTION;
-
-const char *STRING = "Encode this string";
 
 /*-----------------------------END Variables------------------------------------*/
 
@@ -50,24 +49,6 @@ const char *STRING = "Encode this string";
 
 static inline void Send_to_Host(Report);
 
-
-
-// When USB is idle
-void no_action();
-
-/*
- * Encode String and send to host
- */
-void Encode_String();
-
-// Send the signed string to DEVICE
-void Send_String();
-
-// To handle FingerPrint cmds
-void HandleFingerprint();
-
-// To continoulsy check if the DEVICE is connected to the host or not
-void Send_Status();
 /*-----------------------------END Function Prototypes------------------------------------*/
 
 // function handler to directly use the functions according to the operation to be performed
@@ -102,9 +83,9 @@ void Encode_String()
 {
 	Report string_report = { .report_id = ENCODE_STRING};
 	printf("Handle_Signed_String\r\n");
-	for(int i=0; i<19; ++i)
+	for(int i=0; i < 19; ++i)
 	{
-		string_report.data[i] = STRING[i]+KEY;
+		string_report.data[i] = STRING[i] + KEY;
 	}
 	Send_to_Host(string_report);
 	operation = NO_ACTION;
@@ -116,7 +97,6 @@ void Encode_String()
 void HandleFingerprint()
 {
 	printf("Inside HandleFingerprint %d %x\r\n", IN_.parameter, IN_.data[0]);
-//	HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
 	Report Out=  {.report_id = IN_.report_id, .parameter = IN_.parameter, .data = {0}};
 
 	switch(IN_.parameter)
@@ -128,7 +108,7 @@ void HandleFingerprint()
 		Out.data[0] = Get_EntryID();
 		break;
 	case F_ENROLL:
-		HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14);
+//		HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14);
 		Out.data[0] = Enroll_Fingerprint(IN_.data[0]);
 		break;
 	case F_ENROLL_C:
@@ -143,6 +123,7 @@ void HandleFingerprint()
 	case HOST_TO_DEV:
 	case DEV_TO_HOST:
 	}
+
 	Send_to_Host(Out);
 	printf("%x %x \r\n",Out.parameter, Out.data[0]);
 	HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
@@ -155,11 +136,11 @@ void HandleFingerprint()
 void Send_Status()
 {
 	printf("Inside Send_Status\r\n");
-//	HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
 	Report report = { .report_id = STATUS_CHECK, .data = "Co"};
-	uint16_t i = 0;
-	while(i<20)
+	for(uint8_t i = 0; i < 20; ++i)
+	{
 		Send_to_Host(report);
+	}
 }
 
 /*-----------------------------END Function Definitions------------------------------------*/

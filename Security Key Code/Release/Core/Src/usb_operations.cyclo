@@ -1,4 +1,4 @@
-../Core/Src/usb_operations.c:95:6:no_action	1
-../Core/Src/usb_operations.c:101:6:Encode_String	2
-../Core/Src/usb_operations.c:155:6:Send_Status	2
-../Core/Src/usb_operations.c:116:6:HandleFingerprint	7
+../Core/Src/usb_operations.c:76:6:no_action	1
+../Core/Src/usb_operations.c:82:6:Encode_String	2
+../Core/Src/usb_operations.c:136:6:Send_Status	3
+../Core/Src/usb_operations.c:97:6:HandleFingerprint	7

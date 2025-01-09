@@ -50,4 +50,23 @@ typedef struct
 
 typedef void (*function_handler)(void);
 
+
+
+// When USB is idle
+void no_action();
+
+/*
+ * Encode String and send to host
+ */
+void Encode_String();
+
+// Send the signed string to DEVICE
+void Send_String();
+
+// To handle FingerPrint cmds
+void HandleFingerprint();
+
+// To continoulsy check if the DEVICE is connected to the host or not
+void Send_Status();
+
 #endif /* INC_USB_OPERATIONS_H_ */
