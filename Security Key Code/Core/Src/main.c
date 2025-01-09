@@ -49,8 +49,6 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-RNG_HandleTypeDef hrng;
-
 UART_HandleTypeDef huart4;
 UART_HandleTypeDef huart5;
 
@@ -73,7 +71,6 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_UART4_Init(void);
 static void MX_UART5_Init(void);
-static void MX_RNG_Init(void);
 /* USER CODE BEGIN PFP */
 int8_t send_report(uint8_t* report, uint16_t len);
 extern void Open_Fingerprint_Module(void);
@@ -90,6 +87,7 @@ extern void Open_Fingerprint_Module(void);
   */
 int main(void)
 {
+
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
@@ -115,20 +113,18 @@ int main(void)
   MX_USB_DEVICE_Init();
   MX_UART4_Init();
   MX_UART5_Init();
-  MX_RNG_Init();
   /* USER CODE BEGIN 2 */
   Open_Fingerprint_Module();
-  HAL_UART_Receive_IT(&huart5, (uint8_t*)&data, 1);
+  HAL_UART_Receive_IT(&huart5, (uint8_t*)&data, sizeof(data));
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-
 //	  printf("Operation = %d\r\n", operation);
 	  Operations[operation]();
-	  HAL_Delay(50);
+//	  HAL_Delay(50);
 
     /* USER CODE END WHILE */
 
@@ -180,32 +176,6 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-}
-
-/**
-  * @brief RNG Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_RNG_Init(void)
-{
-
-  /* USER CODE BEGIN RNG_Init 0 */
-
-  /* USER CODE END RNG_Init 0 */
-
-  /* USER CODE BEGIN RNG_Init 1 */
-
-  /* USER CODE END RNG_Init 1 */
-  hrng.Instance = RNG;
-  if (HAL_RNG_Init(&hrng) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN RNG_Init 2 */
-
-  /* USER CODE END RNG_Init 2 */
-
 }
 
 /**

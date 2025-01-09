@@ -1,5 +1,0 @@
-../Core/Src/usb_operations.c:87:20:Send_to_Host	8	static
-../Core/Src/usb_operations.c:95:6:no_action	8	static
-../Core/Src/usb_operations.c:101:6:Encode_String	136	static
-../Core/Src/usb_operations.c:116:6:HandleFingerprint	128	static
-../Core/Src/usb_operations.c:155:6:Send_Status	136	static
